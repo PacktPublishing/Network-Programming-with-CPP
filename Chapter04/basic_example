@@ -1,0 +1,59 @@
+#include <iostream>
+#include <curl/curl.h>
+ 
+int main()
+{
+    CURLU * handle;
+    CURLUcode ucode;
+    char * host;
+    char * path;
+ 
+    // Gets an handle
+    handle = curl_url();
+    if(!handle)
+        return 1;
+ 
+    // Parse an URL
+    ucode = curl_url_set(handle, CURLUPART_URL, "https://belaycpp.com/team/", 0);
+    if(ucode != 0)
+    {
+        std::cerr << "Error on URL set" << std::endl;
+        curl_url_cleanup(handle);
+        return 1;
+    }
+ 
+    // Get the host name from the URL
+    ucode = curl_url_get(handle, CURLUPART_HOST, &host, 0);
+    if(ucode == 0) 
+    {
+        std::cout << "Host name: " << host << std::endl;
+        curl_free(host);
+    }
+ 
+    // Gets the path from the URL
+    ucode = curl_url_get(handle, CURLUPART_PATH, &path, 0);
+    if(ucode == 0) 
+    {
+        std::cout << "Path: " << path << std::endl;
+        curl_free(path);
+    }
+ 
+    // Redirect to a different (relative) path
+    ucode = curl_url_set(handle, CURLUPART_URL, "../contact/", 0);
+    if(ucode != 0)
+    {
+        std::cerr << "Error on path set" << std::endl;
+        curl_url_cleanup(handle);
+        return 1;
+    }
+ 
+    // Gets the updated PATH
+    ucode = curl_url_get(handle, CURLUPART_PATH, &path, 0);
+    if(ucode == 0) 
+    {
+        std::cout << "New path: " << path << std::endl;
+        curl_free(path);
+    }
+ 
+    return 0;
+}
