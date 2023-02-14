@@ -89,7 +89,7 @@ int main(void)
                 return 1;
             }
  
-            printf("Sent %lu bytes.\n", (unsigned long)nsent);
+            printf("Sent %lu bytes.\n", static_cast<unsigned long>(nsent));
  
         } while(nsent_total < request.size());
  
