@@ -14,7 +14,7 @@ static uint64_t data_container = 0;
 
 static void on_close(uv_handle_t* handle) 
 {
-    free(handle);
+    delete handle;
 }
 
 
@@ -23,13 +23,13 @@ static void after_write(uv_write_t* request, int status)
     WriteRequest* write_request = (WriteRequest*)request;
 
     if (write_request->buffer.base != NULL)
-        free(write_request->buffer.base);
-    free(write_request);
+        delete[] write_request->buffer.base;
+    delete write_request;
 
     if (status == 0)
         return;
 
-    fprintf(stderr, "uv_write error: %s\n", uv_strerror(status));
+    std::cerr << "uv_write error: " <<uv_strerror(status) << std::endl;
 
     if (status == UV_ECANCELED)
         return;
@@ -42,11 +42,11 @@ static void after_write(uv_write_t* request, int status)
 static void after_shutdown(uv_shutdown_t* request, int status) 
 {
     if (status < 0)
-        fprintf(stderr, "err: %s\n", uv_strerror(status));
-    fprintf(stderr, "data received: %lu\n", data_container / 1024 / 1024);
+        std::cerr << "err: " << uv_strerror(status) << std::endl;
+    std::cerr << "data received: " << (data_container / 1024 / 1024) << std::endl;
     data_container = 0;
     uv_close((uv_handle_t*)request->handle, on_close);
-    free(request);
+    delete request;
 }
 
 
@@ -56,16 +56,16 @@ static void after_read(uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
     uv_shutdown_t* request;
 
     if (nread <= 0 && buf->base != NULL)
-        free(buf->base);
+        delete[] buf->base;
 
     if (nread == 0)
         return;
 
     if (nread < 0) {
-        fprintf(stderr, "err: %s\n", uv_strerror(nread));
+        std::cerr << "err: " << uv_strerror(nread) << std::endl;
 
-        request = (uv_shutdown_t*) malloc(sizeof(*request));
-    if (request == NULL) { std::cerr << "malloc failed" << std::endl; return; }
+        request = new uv_shutdown_t;
+    if (request == NULL) { std::cerr << "new failed" << std::endl; return; }
 
         int ec = uv_shutdown(request, handle, after_shutdown);
         if (ec != 0) { std::cerr << "uv_shutdown failed with value " << ec << std::endl; return; }
@@ -75,8 +75,8 @@ static void after_read(uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 
     data_container += nread;
 
-    write_request = (WriteRequest*) malloc(sizeof(*write_request));
-    if (write_request == NULL) { std::cerr << "malloc failed" << std::endl; return; }
+    write_request = new WriteRequest;
+    if (write_request == NULL) { std::cerr << "new failed" << std::endl; return; }
 
     write_request->buffer = uv_buf_init(buf->base, nread);
 
@@ -87,8 +87,8 @@ static void after_read(uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
 
 static void alloc_cb(uv_handle_t* handle, size_t suggested_size, uv_buf_t* buffer) 
 {
-    buffer->base = static_cast<char*>(malloc(suggested_size));
-    if (buffer->base == NULL) { std::cerr << "malloc failed" << std::endl; return; }
+    buffer->base = new char[suggested_size];
+    if (buffer->base == NULL) { std::cerr << "new failed" << std::endl; return; }
     buffer->len = suggested_size;
 }
 
@@ -99,8 +99,8 @@ static void on_connection(uv_stream_t* server, int status)
 
     if (status != 0) { std::cerr << "status not OK" << std::endl; return; }
 
-    stream = static_cast<uv_tcp_t*>(malloc(sizeof(uv_tcp_t)));
-    if (stream == NULL) { std::cerr << "malloc failed" << std::endl; return; }
+    stream = new uv_tcp_t;
+    if (stream == NULL) { std::cerr << "new failed" << std::endl; return; }
 
     int ec = uv_tcp_init(uv_default_loop(), stream);
     if (ec != 0) { std::cerr << "uv_tcp_init failed with value " << ec << std::endl; return; }
@@ -123,8 +123,8 @@ static int tcp_echo_server()
     int ec = uv_ip4_addr("0.0.0.0", PORT, &addr);
     if (ec != 0) { std::cerr << "uv_run failed with value " << ec << std::endl; return ec; }
     
-    tcp_server = (uv_tcp_t*) malloc(sizeof(*tcp_server));
-    if (tcp_server == NULL) { std::cerr << "malloc failed" << std::endl; return 1; }
+    tcp_server = new uv_tcp_t;
+    if (tcp_server == NULL) { std::cerr << "new failed" << std::endl; return 1; }
     
     ec = uv_tcp_init(uv_default_loop(), tcp_server);
     if (ec != 0) { std::cerr << "uv_tcp_init failed with value " << ec << std::endl; return ec; }
