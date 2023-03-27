@@ -61,11 +61,12 @@ static void after_read(uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
     if (nread == 0)
         return;
 
-    if (nread < 0) {
+    if (nread < 0) 
+    {
         std::cerr << "err: " << uv_strerror(nread) << std::endl;
 
         request = new uv_shutdown_t;
-    if (request == NULL) { std::cerr << "new failed" << std::endl; return; }
+        if (request == NULL) { std::cerr << "new failed" << std::endl; return; }
 
         int ec = uv_shutdown(request, handle, after_shutdown);
         if (ec != 0) { std::cerr << "uv_shutdown failed with value " << ec << std::endl; return; }
