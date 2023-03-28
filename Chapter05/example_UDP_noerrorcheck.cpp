@@ -16,15 +16,15 @@ void on_read(uv_udp_t *req, ssize_t nread, const uv_buf_t * buf, const sockaddr 
 {
     if (nread == -1) 
     {
-        fprintf(stderr, "Read error!\n");
+        std::cerr << "Read error!" << std::endl;
         uv_close(reinterpret_cast<uv_handle_t*>(req), NULL);
-        free(buf->base);
+        delete[] buf->base;
         return;
     }
 
     char sender[17] = { 0 };
     uv_ip4_name(reinterpret_cast<const sockaddr_in*>(addr), sender, 16);
-    fprintf(stderr, "Recv from %s\n", sender);
+    std::cerr << "Recv from " << sender << std::endl;
 
     // DHCP specific code
     unsigned int *as_integer = reinterpret_cast<unsigned int*>(buf->base);
@@ -33,9 +33,9 @@ void on_read(uv_udp_t *req, ssize_t nread, const uv_buf_t * buf, const sockaddr 
     int i;
     for (i = 0; i < 4; i++)
         ip[i] = (ipbin >> i*8) & 0xff;
-    fprintf(stderr, "Offered IP %d.%d.%d.%d\n", ip[3], ip[2], ip[1], ip[0]);
+    std::cerr << "Offered IP " << ip[3] << "." << ip[2] << "." << ip[1] << "." << ip[0] << std::endl;
 
-    free(buf->base);
+    delete[] buf->base;
     uv_udp_recv_stop(req);
 }
 
@@ -54,7 +54,7 @@ void on_send(uv_udp_send_t *req, int status)
 {
     if (status == -1) 
     {
-        fprintf(stderr, "Send error!\n");
+        std::cerr << "Send error!" << std::endl;
         return;
     }
 }
