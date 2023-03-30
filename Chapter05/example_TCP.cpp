@@ -96,7 +96,7 @@ static void on_connection(uv_stream_t* server, int status)
 static int tcp_echo_server() 
 {
     uv_tcp_t* tcp_server;
-    struct sockaddr_in addr;
+    sockaddr_in addr;
     
     uv_ip4_addr("0.0.0.0", PORT, &addr);    
     tcp_server = new uv_tcp_t;    
