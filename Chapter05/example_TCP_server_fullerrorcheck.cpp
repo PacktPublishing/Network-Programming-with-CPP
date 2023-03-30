@@ -120,7 +120,7 @@ static int tcp_echo_server()
 {
     uv_tcp_t* tcp_server;
     struct sockaddr_in addr;
-
+    
     int ec = uv_ip4_addr("0.0.0.0", PORT, &addr);
     if (ec != 0) { std::cerr << "uv_run failed with value " << ec << std::endl; return ec; }
     
@@ -130,10 +130,10 @@ static int tcp_echo_server()
     ec = uv_tcp_init(uv_default_loop(), tcp_server);
     if (ec != 0) { std::cerr << "uv_tcp_init failed with value " << ec << std::endl; return ec; }
     
-    ec = uv_tcp_bind(tcp_server, (const struct sockaddr*)&addr, 0);
+    ec = uv_tcp_bind(tcp_server, reinterpret_cast<sockaddr*>(&addr), 0);
     if (ec != 0) { std::cerr << "uv_tcp_bind failed with value " << ec << std::endl; return ec; }
     
-    ec = uv_listen((uv_stream_t*)tcp_server, SOMAXCONN, on_connection);
+    ec = uv_listen(reinterpret_cast<uv_stream_t*>(tcp_server), SOMAXCONN, on_connection);
     if (ec != 0) { std::cerr << "uv_listen failed with value " << ec << std::endl; return ec; }
     
     return 0;
