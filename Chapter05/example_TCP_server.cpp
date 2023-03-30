@@ -88,8 +88,8 @@ static void on_connection(uv_stream_t* server, int status)
     stream = new uv_tcp_t;
     uv_tcp_init(uv_default_loop(), stream);
     stream->data = server;
-    uv_accept(server, (uv_stream_t*)stream);
-    uv_read_start((uv_stream_t*)stream, alloc_cb, after_read);
+    uv_accept(server, reinterpret_cast<uv_stream_t*>(stream);
+    uv_read_start(reinterpret_cast<uv_stream_t*>(stream), alloc_cb, after_read);
 }
 
 
