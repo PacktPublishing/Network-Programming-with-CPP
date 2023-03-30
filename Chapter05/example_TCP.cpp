@@ -101,8 +101,8 @@ static int tcp_echo_server()
     uv_ip4_addr("0.0.0.0", PORT, &addr);    
     tcp_server = new uv_tcp_t;    
     uv_tcp_init(uv_default_loop(), tcp_server);
-    uv_tcp_bind(tcp_server, (const struct sockaddr*)&addr, 0);
-    uv_listen((uv_stream_t*)tcp_server, SOMAXCONN, on_connection);
+    uv_tcp_bind(tcp_server, reinterpret_cast<sockaddr*>(&addr), 0);
+    uv_listen(reinterpret_cast<uv_stream_t*>(tcp_server), SOMAXCONN, on_connection);
     
     return 0;
 }
