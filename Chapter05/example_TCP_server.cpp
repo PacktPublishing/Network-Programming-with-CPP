@@ -29,12 +29,12 @@ static void after_write(uv_write_t* request, int status)
     if (status == 0)
         return;
 
-    std::cerr << "uv_write error: " <<uv_strerror(status) << std::endl;
+    std::cerr << "uv_write error: " << uv_strerror(status) << std::endl;
 
     if (status == UV_ECANCELED)
         return;
 
-    uv_close((uv_handle_t*)request->handle, on_close);
+    uv_close(reinterpret_cast<uv_handle_t*>(request->handle), on_close);
 }
 
 
@@ -44,7 +44,7 @@ static void after_shutdown(uv_shutdown_t* request, int status)
         std::cerr << "err: " << uv_strerror(status) << std::endl;
     std::cerr << "data received: " << (data_container / 1024 / 1024) << std::endl;
     data_container = 0;
-    uv_close((uv_handle_t*)request->handle, on_close);
+    uv_close(reinterpret_cast<uv_handle_t*>(request->handle), on_close);
     delete request;
 }
 
