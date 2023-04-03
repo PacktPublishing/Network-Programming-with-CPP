@@ -9,7 +9,7 @@ static uv_loop_t *loop;
 
 static void alloc_cb(uv_handle_t* handle, size_t size, uv_buf_t* buf) 
 {
-	*buf = uv_buf_init(new char[size], size);
+    *buf = uv_buf_init(new char[size], size);
 }
 
 void on_close(uv_handle_t* handle)
