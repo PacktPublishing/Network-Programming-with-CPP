@@ -64,7 +64,7 @@ void start_connection(char *host, int port)
 {
     uv_tcp_t *sock = new uv_tcp_t;
     uv_tcp_init(uv_default_loop(), sock);
-    uv_tcp_keepalive(sock, 1, 60);
+    uv_tcp_keepalive(sock, true, 60);
 
     sockaddr_in dest;
     uv_ip4_addr(host, port, &dest);
