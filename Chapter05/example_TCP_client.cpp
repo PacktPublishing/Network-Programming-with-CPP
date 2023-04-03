@@ -1,10 +1,6 @@
 #include <iostream>
 #include <uv.h>
 
-static void on_close(uv_handle_t* handle);
-static void on_connect(uv_connect_t* req, int status);
-static void on_write(uv_write_t* req, int status);
-
 static uv_loop_t *loop;
 
 static void alloc_cb(uv_handle_t* handle, size_t size, uv_buf_t* buf) 
@@ -25,7 +21,7 @@ void on_write(uv_write_t* req, int status)
         return;
     }
     std::cout << "wrote." << std::endl;
-    free(req);
+    delete req;
 }
 
 void on_read(uv_stream_t* tcp, ssize_t nread, const uv_buf_t* buf)
@@ -65,7 +61,7 @@ void on_connect(uv_connect_t* connection, int status)
     uv_read_start(stream, alloc_cb, on_read);
 }
 
-void startConn(char *host, int port)
+void start_connection(char *host, int port)
 {
     uv_tcp_t *pSock = new uv_tcp_t;
     uv_tcp_init(loop, pSock);
@@ -84,7 +80,7 @@ int main(int argc, char **argv)
     loop = uv_default_loop();
     int i;
     for (i=0; i<10; i++)
-        startConn("127.0.0.1", 80);
+        start_connection("127.0.0.1", 80);
 
     uv_run(loop, UV_RUN_DEFAULT);
 }
