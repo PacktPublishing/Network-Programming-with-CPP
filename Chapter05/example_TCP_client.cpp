@@ -1,7 +1,6 @@
 #include <iostream>
 #include <uv.h>
 
-static uv_loop_t *loop;
 
 static void alloc_cb(uv_handle_t* handle, size_t size, uv_buf_t* buf) 
 {
@@ -64,7 +63,7 @@ void on_connect(uv_connect_t* connection, int status)
 void start_connection(char *host, int port)
 {
     uv_tcp_t *pSock = new uv_tcp_t;
-    uv_tcp_init(loop, pSock);
+    uv_tcp_init(uv_default_loop(), pSock);
     uv_tcp_keepalive(pSock, 1, 60);
 
     struct sockaddr_in dest;
@@ -76,11 +75,10 @@ void start_connection(char *host, int port)
 }
 
 int main(int argc, char **argv)
-{
-    loop = uv_default_loop();
+{;
     int i;
     for (i=0; i<10; i++)
         start_connection("127.0.0.1", 80);
 
-    uv_run(loop, UV_RUN_DEFAULT);
+    uv_run(uv_default_loop(), UV_RUN_DEFAULT);
 }
