@@ -62,16 +62,16 @@ void on_connect(uv_connect_t* connection, int status)
 
 void start_connection(char *host, int port)
 {
-    uv_tcp_t *pSock = new uv_tcp_t;
-    uv_tcp_init(uv_default_loop(), pSock);
-    uv_tcp_keepalive(pSock, 1, 60);
+    uv_tcp_t *sock = new uv_tcp_t;
+    uv_tcp_init(uv_default_loop(), sock);
+    uv_tcp_keepalive(sock, 1, 60);
 
-    struct sockaddr_in dest;
+    sockaddr_in dest;
     uv_ip4_addr(host, port, &dest);
 
     uv_connect_t *conn = new uv_connect_t;
     std::cout <<  "allocated " << conn << std::endl;
-    uv_tcp_connect(conn, pSock, reinterpret_cast<const sockaddr*>(&dest), on_connect);
+    uv_tcp_connect(conn, sock, reinterpret_cast<const sockaddr*>(&dest), on_connect);
 }
 
 int main(int argc, char **argv)
