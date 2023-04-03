@@ -69,9 +69,9 @@ void start_connection(char *host, int port)
     struct sockaddr_in dest;
     uv_ip4_addr(host, port, &dest);
 
-    uv_connect_t *pConn = new uv_connect_t;
-    std::cout <<  "allocated " << pConn << std::endl;
-    uv_tcp_connect(pConn, pSock, reinterpret_cast<const sockaddr*>(&dest), on_connect);
+    uv_connect_t *conn = new uv_connect_t;
+    std::cout <<  "allocated " << conn << std::endl;
+    uv_tcp_connect(conn, pSock, reinterpret_cast<const sockaddr*>(&dest), on_connect);
 }
 
 int main(int argc, char **argv)
