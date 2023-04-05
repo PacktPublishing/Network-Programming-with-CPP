@@ -1,3 +1,5 @@
+// g++ example_TCP_server_fullerrorcheck.cpp -luv
+
 #include <iostream>
 #include <uv.h>
 
