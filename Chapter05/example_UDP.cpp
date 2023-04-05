@@ -73,7 +73,7 @@ int main()
     sockaddr_in bc_addr;
     uv_ip4_addr("0.0.0.0", 0, &bc_addr);
     uv_udp_bind(&send_socket, reinterpret_cast<sockaddr*>(&bc_addr), 0);
-    uv_udp_set_broadcast(&send_socket, 1);
+    uv_udp_set_broadcast(&send_socket, true);
 
     uv_udp_send_t send_req;
     uv_buf_t discover_msg = make_msg(&send_req);
