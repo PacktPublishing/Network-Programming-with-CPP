@@ -1,3 +1,5 @@
+// g++ example_UDP.cpp -luv
+
 #include <iostream>
 #include <cstring> 
 
