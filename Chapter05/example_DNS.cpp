@@ -1,3 +1,5 @@
+// g++ example_DNS.cpp -luv
+
 #include <iostream>
 #include <cstring>
 #include <uv.h>
