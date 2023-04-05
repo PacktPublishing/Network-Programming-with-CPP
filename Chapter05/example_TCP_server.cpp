@@ -1,3 +1,5 @@
+// g++ example_TCP_server.cpp -luv
+
 #include <iostream>
 #include <uv.h>
 
