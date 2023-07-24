@@ -3,7 +3,7 @@
 
 #include "ace/Acceptor.h"
 
-#if !defined (ACE_LACKS_PRAGMA_ONCE)
+#if !defined(ACE_LACKS_PRAGMA_ONCE)
 # pragma once
 #endif /* ACE_LACKS_PRAGMA_ONCE */
 
@@ -14,61 +14,58 @@ template <typename PEER_STREAM>
 class Svc_Handler : public ACE_Svc_Handler <PEER_STREAM, ACE_NULL_SYNCH>
 {
   // = TITLE
-  //     This class does the work once the <ACE_Oneshot_Acceptor> has
-  //     accepted a connection.
+  //   This class does the work once the <ACE_Oneshot_Acceptor> has
+  //   accepted a connection.
 public:
   // = Initialization method.
-  Svc_Handler (ACE_Reactor *r);
+  Svc_Handler(ACE_Reactor *r);
 
-  virtual int open (void *);
+  virtual int open(void *);
   // Perform the work of the SVC_HANDLER.
 
-  virtual int handle_input (ACE_HANDLE = ACE_INVALID_HANDLE);
+  virtual int handle_input(ACE_HANDLE = ACE_INVALID_HANDLE);
   // Handle data from the client.
 
-  virtual int close (u_long);
+  virtual int close(u_long);
   // Called if ACE_Svc_Handler is closed down unexpectedly.
 
-  virtual int handle_timeout (const ACE_Time_Value &, const void *arg);
+  virtual int handle_timeout(const ACE_Time_Value &, const void *arg);
   // Handles acceptor timeouts.
 
 private:
-  typedef ACE_Svc_Handler <PEER_STREAM, ACE_NULL_SYNCH>
-          SVC_HANDLER;
+  typedef ACE_Svc_Handler <PEER_STREAM, ACE_NULL_SYNCH> SVC_HANDLER;
 };
 
 template <typename SVC_HANDLER, typename PEER_ACCEPTOR>
 class IPC_Server : public ACE_Oneshot_Acceptor<SVC_HANDLER, PEER_ACCEPTOR>
 {
   // = TITLE
-  //     This class illustrates how the <ACE_Oneshot_Acceptor> works.
+  //   This class illustrates how the <ACE_Oneshot_Acceptor> works.
 public:
   // = Initialization and termination.
-  IPC_Server (void);
+  IPC_Server(void);
   // Constructor.
 
-  ~IPC_Server (void);
+  ~IPC_Server(void);
   // Destructor.
 
   // = Demultiplexing hooks.
-  virtual int handle_close (ACE_HANDLE handle,
-                            ACE_Reactor_Mask mask);
+  virtual int handle_close(ACE_HANDLE handle, ACE_Reactor_Mask mask);
   // Make sure not to close down the <handle> if we're removed from
   // the <Reactor>.
 
   // = Dynamic linking hooks.
-  virtual int init (int argc, ACE_TCHAR *argv[]);
+  virtual int init(int argc, ACE_TCHAR *argv[]);
   // Initialize the network server.
 
-  virtual int fini (void);
+  virtual int fini(void);
   // Close down the server.
 
-  virtual int svc (void);
+  virtual int svc(void);
   // Run the interative service.
 
 private:
-  typedef ACE_Oneshot_Acceptor<SVC_HANDLER, PEER_ACCEPTOR>
-          inherited;
+  typedef ACE_Oneshot_Acceptor<SVC_HANDLER, PEER_ACCEPTOR> inherited;
 
   typename PEER_ACCEPTOR::PEER_ADDR server_addr_;
   // Address of this server.
