@@ -1,12 +1,6 @@
-#ifndef CPP_ACCEPTOR_H
-#define CPP_ACCEPTOR_H
+# pragma once
 
 #include "ace/Acceptor.h"
-
-#if !defined(ACE_LACKS_PRAGMA_ONCE)
-# pragma once
-#endif /* ACE_LACKS_PRAGMA_ONCE */
-
 #include "ace/Svc_Handler.h"
 #include "ace/Sig_Adapter.h"
 
@@ -77,5 +71,3 @@ private:
   // Keeps track of when we shut down due to receipt of the SIGINT
   // signal.
 };
-
-#endif /* CPP_ACCEPTOR_H */

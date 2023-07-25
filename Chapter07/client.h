@@ -1,15 +1,6 @@
-/* -*- C++ -*- */
-// $Id$
-
-#ifndef CPP_CONNECTOR_H
-#define CPP_CONNECTOR_H
+# pragma once
 
 #include "ace/Service_Config.h"
-
-#if !defined(ACE_LACKS_PRAGMA_ONCE)
-# pragma once
-#endif /* ACE_LACKS_PRAGMA_ONCE */
-
 #include "ace/Connector.h"
 #include "ace/Svc_Handler.h"
 #include "ace/Sig_Adapter.h"
@@ -82,5 +73,3 @@ private:
     // signal.
 };
 
-
-#endif /* CPP_CONNECTOR_H */
