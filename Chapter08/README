@@ -1,0 +1,17 @@
+Prerequisite: Asio Library
+    apt-get install libasio-dev #(on Ubuntu)
+
+Here are the different command lines to build the examples
+
+    make tcp_server
+    make tcp_client
+
+    make udp_server
+    make udp_client
+
+You also have the possibility to build all, clean and show help
+
+    make all
+    make clean
+    make help
+
