@@ -9,11 +9,11 @@ int main()
     boost::asio::ip::tcp::socket socket(io_service);
     
     // Connection
-    socket.connect( boost::asio::ip::tcp::endpoint( boost::asio::ip::address::from_std::string("127.0.0.1"), 1234 ));
+    socket.connect( boost::asio::ip::tcp::endpoint( boost::asio::ip::address::from_string("127.0.0.1"), 1234 ));
 
     //  Request/message from client
     const std::string msg = "Hello from Client!\n";
-    system::error_code error;
+    boost::system::error_code error;
     boost::asio::write( socket, boost::asio::buffer(msg), error );
     if( !error ) 
         std::cout << "Client sent hello message!" << std::endl;
