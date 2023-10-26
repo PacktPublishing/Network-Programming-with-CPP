@@ -8,6 +8,8 @@ tcp_server: example_asio_tcp_server.cpp
 tcp_client: example_asio_tcp_client.cpp
 	$(CC) -o $@ $^ $(CFLAGS)
 
+tcp: tcp_server tcp_client 
+
 
 udp_server: example_asio_udp_server.cpp
 	$(CC) -o $@ $^ $(CFLAGS)
@@ -15,6 +17,8 @@ udp_server: example_asio_udp_server.cpp
 
 udp_client: example_asio_udp_client.cpp
 	$(CC) -o $@ $^ $(CFLAGS)
+
+udp: udp_server udp_client
 
 
 all: tcp_server tcp_client udp_server udp_client
