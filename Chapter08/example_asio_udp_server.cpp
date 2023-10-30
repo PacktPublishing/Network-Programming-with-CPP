@@ -1,42 +1,38 @@
+
+#include <cstdlib>
 #include <iostream>
-#include <boost/array.hpp>
 #include <boost/asio.hpp>
 
-std::string make_daytime_string()
-{
-    std::time_t now = std::time(0);
-    return std::ctime(&now);
-}
+
+const size_t MAX_LENGTH = 1024;
 
 int main()
 {
     try
     {
-
-        boost::asio::io_service io_service;
-
-        boost::asio::ip::udp::socket socket(io_service, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 1234));
+        boost::asio::io_context io_context;
         
+        boost::asio::ip::udp::socket sock(io_context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 1234));
         while (true)
         {
-            boost::array<char, 1> recv_buf;
-            boost::asio::ip::udp::endpoint remote_endpoint;
-            boost::system::error_code error;
-            socket.receive_from(boost::asio::buffer(recv_buf), remote_endpoint, 0, error);
+            char data[MAX_LENGTH];
+            boost::asio::ip::udp::endpoint sender_endpoint;
+            size_t length = sock.receive_from(boost::asio::buffer(data, MAX_LENGTH), sender_endpoint);
+            
+            std::cout << "Client sent ";
+            std::cout.write(data, length);
+            std::cout << "\n";
+            
+            sock.send_to(boost::asio::buffer(data, length), sender_endpoint);
 
-            if (error && error != boost::asio::error::message_size)
-                throw boost::system::system_error(error);
+            std::cout << "Server sent hello to client!" << std::endl;
 
-            std::string message = make_daytime_string();
-
-            boost::system::error_code ignored_error;
-            socket.send_to(boost::asio::buffer(message), remote_endpoint, 0, ignored_error);
+            break;
         }
-
     }
     catch (std::exception& e)
     {
-        std::cerr << e.what() << std::endl;
+        std::cerr << "Exception: " << e.what() << "\n";
     }
 
     return 0;

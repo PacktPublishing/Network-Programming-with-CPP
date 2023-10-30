@@ -1,36 +1,41 @@
+
+#include <cstdlib>
+#include <cstring>
 #include <iostream>
-#include <boost/array.hpp>
 #include <boost/asio.hpp>
 
 
+const size_t MAX_LENGTH = 1024;
+
 int main()
 {
-  try
-  {
-    std::string host = "127.0.0.1";
+    try
+    {
+        boost::asio::io_context io_context;
 
-    boost::asio::io_service io_service;
+        boost::asio::ip::udp::socket s(io_context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 0));
 
-    boost::asio::ip::udp::resolver resolver(io_service);
-    boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), host, "daytime");
-    boost::asio::ip::udp::endpoint receiver_endpoint = *resolver.resolve(query);
+        boost::asio::ip::udp::resolver resolver(io_context);
+        boost::asio::ip::udp::resolver::results_type endpoints =
+            resolver.resolve(boost::asio::ip::udp::v4(), "127.168.0.1", "1234");
 
-    boost::asio::ip::udp::socket socket(io_service);
-    socket.open(boost::asio::ip::udp::v4());
+        char request[] = "Hello world!";
+        size_t request_length = std::strlen(request);
+        s.send_to(boost::asio::buffer(request, request_length), *endpoints.begin());
+        std::cout << "Client sent hello message!" << std::endl;
 
-    boost::array<char, 1> send_buf  = { 0 };
-    socket.send_to(boost::asio::buffer(send_buf), receiver_endpoint);
+        char reply[MAX_LENGTH];
+        boost::asio::ip::udp::endpoint sender_endpoint;
+        size_t reply_length = s.receive_from(
+                boost::asio::buffer(reply, MAX_LENGTH), sender_endpoint);
+        std::cout << "Reply is ";
+        std::cout.write(reply, reply_length);
+        std::cout << "\n";
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "Exception: " << e.what() << "\n";
+    }
 
-    boost::array<char, 128> recv_buf;
-    boost::asio::ip::udp::endpoint sender_endpoint;
-    size_t len = socket.receive_from(boost::asio::buffer(recv_buf), sender_endpoint);
-
-    std::cout.write(recv_buf.data(), len);
-  }
-  catch (std::exception& e)
-  {
-    std::cerr << e.what() << std::endl;
-  }
-
-  return 0;
+    return 0;
 }

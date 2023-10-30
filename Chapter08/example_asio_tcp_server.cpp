@@ -28,6 +28,6 @@ int main()
     std::cout << message << std::endl;
     // Write operation
     send_(socket_, "Hello From Server!");
-    std::cout << "Servent sent Hello message to Client!" << std::endl;
+    std::cout << "Server sent Hello message to Client!" << std::endl;
     return 0;
 }
