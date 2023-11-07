@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=/usr/lib/x86_64-linux-gnu/libACE.so
 
-all: example_server example_client
+all: server client
 
 
 clean:
@@ -9,10 +9,10 @@ clean:
 	rm -f server
 
 
-server: example_server.cpp server.cpp
+server: server.cpp
 	$(CC) -o $@ $^ $(CFLAGS)
 
-client: example_client.cpp client.cpp
+client: client.cpp
 	$(CC) -o $@ $^ $(CFLAGS)
 
 	
