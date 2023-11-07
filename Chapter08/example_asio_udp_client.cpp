@@ -16,8 +16,7 @@ int main()
         boost::asio::ip::udp::socket s(io_context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), 0));
 
         boost::asio::ip::udp::resolver resolver(io_context);
-        boost::asio::ip::udp::resolver::results_type endpoints =
-            resolver.resolve(boost::asio::ip::udp::v4(), "127.168.0.1", "1234");
+        boost::asio::ip::udp::resolver::results_type endpoints = resolver.resolve(boost::asio::ip::udp::v4(), "127.168.0.1", "1234");
 
         char request[] = "Hello world!";
         size_t request_length = std::strlen(request);
@@ -26,8 +25,7 @@ int main()
 
         char reply[MAX_LENGTH];
         boost::asio::ip::udp::endpoint sender_endpoint;
-        size_t reply_length = s.receive_from(
-                boost::asio::buffer(reply, MAX_LENGTH), sender_endpoint);
+        size_t reply_length = s.receive_from(boost::asio::buffer(reply, MAX_LENGTH), sender_endpoint);
         std::cout << "Reply is ";
         std::cout.write(reply, reply_length);
         std::cout << "\n";
