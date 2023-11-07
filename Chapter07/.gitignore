@@ -1,0 +1,5 @@
+client
+server
+*.backup
+*.swp
+*.swo
