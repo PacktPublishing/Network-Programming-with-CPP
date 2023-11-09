@@ -2,7 +2,7 @@
 #include "ace/Log_Msg.h"
 
 static u_short SERVER_PORT = ACE_DEFAULT_SERVER_PORT;
-static const char *const SERVER_HOST = ACE_DEFAULT_SERVER_HOST;
+static const char *const SERVER_HOST = "127.168.0.1";
 static const int MAX_ITERATIONS = 4;
 
 int
