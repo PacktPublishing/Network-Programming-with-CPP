@@ -27,7 +27,6 @@ void on_write(uv_write_t* req, int status)
 
 void on_read(uv_stream_t* tcp, ssize_t nread, const uv_buf_t* buf)
 {
-    std::cout << "on_read - " << tcp << std::endl;
     if(nread >= 0)
         std::cout << "Read: " << buf->base << std::endl;
     else
@@ -80,7 +79,7 @@ int main(int argc, char **argv)
 {;
     int i;
     for (i=0; i<10; i++)
-        start_connection("127.0.0.1", 80);
+        start_connection("127.0.0.1", 8080);
 
     uv_run(uv_default_loop(), UV_RUN_DEFAULT);
 }

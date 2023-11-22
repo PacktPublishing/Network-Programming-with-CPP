@@ -3,7 +3,7 @@
 #include <iostream>
 #include <uv.h>
 
-#define PORT 8000
+#define PORT 8080
 
 struct WriteRequest 
 {
@@ -69,6 +69,8 @@ static void after_read(uv_stream_t* handle, ssize_t nread, const uv_buf_t* buf)
         uv_shutdown(request, handle, after_shutdown);
         return;
     }
+
+    std::cout << "after_read - " << buf->base << std::endl;
 
     data_container += nread;
     write_request = new WriteRequest;
