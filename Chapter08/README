@@ -9,6 +9,11 @@ Here are the different command lines to build the examples
     make udp_server
     make udp_client
 
+You can build all of tcp or udp using these
+
+    make tcp
+    make udp
+
 You also have the possibility to build all, clean and show help
 
     make all

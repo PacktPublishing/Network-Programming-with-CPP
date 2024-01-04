@@ -53,6 +53,7 @@ int client(const std::string & url, unsigned int msec)
 
     start = milliseconds();
 
+    std::cout << "Sending query, expecting a response in " << ntohl(msec) << "ms" << std::endl;  
     if (nn_send(fd, msg, sizeof(msg), 0) < 0) 
     {
         std::cerr << "nn_send: " << nn_strerror(nn_errno()) << std::endl;
@@ -76,16 +77,10 @@ int client(const std::string & url, unsigned int msec)
     return 0;
 }
 
-int main(int argc, char **argv)
+int main()
 {
-    if (argc < 3) 
-    {
-        std::cerr << "usage: " << argv[0] << " <url> <msec>" << std::endl;
-        exit(EXIT_FAILURE);
-    }    
-    
-    std::string url = argv[1];
-    unsigned int msec = atoi(argv[2]);
+    std::string url = "tcp://127.0.0.1:8080";
+    unsigned int msec = 1500;
     int rc = client(url, msec);
     
     return rc;

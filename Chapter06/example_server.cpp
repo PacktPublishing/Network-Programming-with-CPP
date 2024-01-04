@@ -123,6 +123,7 @@ int server(const std::string & url)
         memcpy(&timer, body, sizeof(timer));
         nn_freemsg(body);
 
+        std::cout << "Received query - sending response in " << ntohl(timer) << "ms" << std::endl ;
         work = new Work;
         if (work == NULL) 
         {
@@ -156,15 +157,9 @@ int server(const std::string & url)
 }
 
 
-int main(int argc, char **argv)
+int main()
 {
-    if (argc < 2) 
-    {
-        std::cerr << "usage: " << argv[0] << " <url>" << std::endl;
-        exit(EXIT_FAILURE);
-    }    
-    
-    std::string url = argv[1];
+    std::string url = "tcp://127.0.0.1:8080";
     int rc = server(url);
     
     return rc;
