@@ -152,6 +152,7 @@ int server(const std::string & url)
         }
     }
 
+    nn_shutdown(socket, ec);
     nn_close(socket);
     return 1;
 }
