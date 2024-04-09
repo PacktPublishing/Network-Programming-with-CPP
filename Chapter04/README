@@ -1,0 +1,14 @@
+Prerequisite: libcurl
+
+Here are the different command lines to build the examples
+
+    make basic_example
+    make example_tcp
+    make member_function_callback
+
+You also have the possibility to build all, clean and show help
+
+    make all
+    make clean
+    make help
+
