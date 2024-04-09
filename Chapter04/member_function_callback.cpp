@@ -24,6 +24,6 @@ int main()
     // Here, we pass our member function as a callback
     // using the static function that wraps the function my_read
     curl_easy_setopt(handle, CURLOPT_READFUNCTION, Foo::static_f);
-    curl_easy_setopt(handle, CURLOPT_XFERINFODATA, &foo);
+    curl_easy_setopt(handle, CURLOPT_READDATA, &foo);
     return 0;
 }
