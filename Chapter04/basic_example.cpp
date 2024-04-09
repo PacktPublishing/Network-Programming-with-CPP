@@ -1,6 +1,6 @@
 #include <iostream>
 #include <curl/curl.h>
- 
+
 int main()
 {
     CURL * curl;
@@ -11,6 +11,11 @@ int main()
     char * path;
 
     curl = curl_easy_init();
+    if(curl == NULL)
+    {
+        std::cerr << "Error on init [" << ecode << "]" << std::endl;
+        return 1;
+    }
 
     // Gets an url
     url = curl_url();
@@ -41,8 +46,15 @@ int main()
         std::cout << "Path: " << path << std::endl;
         curl_free(path);
     }
- 
-    curl_easy_setopt(curl, CURLOPT_CURLU, url);
+
+    ecode = curl_easy_setopt(curl, CURLOPT_CURLU, url);
+    if(ecode != CURLE_OK)
+    {
+        std::cerr << "Error on setopt [" << ecode << "]" << std::endl;
+        curl_url_cleanup(url);
+        return 1;
+    }
+
     ecode = curl_easy_perform(curl);
     if(ecode != CURLE_OK)
     {
@@ -50,6 +62,8 @@ int main()
         curl_url_cleanup(url);
         return 1;
     }
+
+    curl_url_cleanup(url);
  
     return 0;
 }
