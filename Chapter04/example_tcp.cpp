@@ -97,7 +97,7 @@ int main(void)
         std::cout << "Reading response..." << std::endl;
  
         // Looping until we receive no more
-        size_t nread;
+        size_t nread = 0;
         do 
         {
             char buffer[BUFF_SIZE];
@@ -120,8 +120,9 @@ int main(void)
             }
  
             if(nread != 0)
-                std::cout <<"Received " << nread << " bytes" << std::endl;
-        } while(nread > 0);
+                std::cout << "Received " << nread << " bytes" << std::endl;
+
+        } while(nread != 0);
  
         // Cleanup
 
