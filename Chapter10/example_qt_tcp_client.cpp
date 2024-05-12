@@ -1,61 +1,65 @@
-#include <QCoreApplication>
-
-#include <QObject>
+#include <iostream>
+#include <thread>
 #include <QTcpSocket>
-#include <QDebug>
+#include <QHostAddress>
 
-class SocketTest : public QObject
+
+class TCPClient: public QObject
 {
 public:
-    explicit SocketTest(QObject *parent = 0) : QObject(parent) {}
-
-    void Connect()
-    {
-        socket = new QTcpSocket(this);
-        socket->connectToHost("bogotobogo.com", 80);
-
-        if(socket->waitForConnected(3000))
-        {
-            qDebug() << "Connected!";
-
-            // send
-            socket->write("hello server\r\n\r\n\r\n\r\n");
-            socket->waitForBytesWritten(1000);
-            socket->waitForReadyRead(3000);
-            qDebug() << "Reading: " << socket->bytesAvailable();
-
-            qDebug() << socket->readAll();
-
-            socket->close();
-        }
-        else
-        {
-            qDebug() << "Not connected!";
-        }
-
-        // sent
-
-        // got
-
-        // closed
-    }
-
-signals:
+    TCPClient();
+    void start();
+    bool alive();
 
 public slots:
+    void onReadyRead();
 
 private:
-    QTcpSocket *socket;
-
+    QTcpSocket mSocket;
+    bool mAlive;
 };
+
+
+TCPClient::TCPClient(): mAlive(true)
+{
+}
+
+void TCPClient::start()
+{
+    std::cout << "Connecting..." << std::endl;
+    mSocket.connectToHost(QHostAddress("127.0.0.1"), 4242);
+    connect(&mSocket, &QIODevice::readyRead, this, &TCPClient::onReadyRead);
+}
+
+bool TCPClient::alive()
+{
+    return mAlive;
+}
+
+void TCPClient::onReadyRead()
+{
+    // Getting message
+    QByteArray data = mSocket.readAll();
+    std::cout << "Message received: " << data.toStdString() << std::endl;
+
+    // Send response
+    std::cout << "Sending message back to server..." << std::endl;
+    mSocket.write(QByteArray("Hello server!\n"));
+
+    // End of connection
+    mAlive = false;
+}
 
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    TCPClient client;
+    client.start();
 
-    SocketTest cTest;
-    cTest.Connect();
+    while (client.alive())
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-    return a.exec();
+    std::cout << "End of tcp connection" << std::endl;
+    return 0;
 }
+
