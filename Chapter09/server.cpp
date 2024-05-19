@@ -1,36 +1,46 @@
-#include <boost/network/protocol/http/server.hpp>
 #include <iostream>
+#include <boost/network/protocol/http/server.hpp>
 
-namespace http = boost::network::http;
 
-struct hello_world;
-typedef http::server<hello_world> server;
+struct HelloWorld;
+typedef boost::network::http::server<HelloWorld> Server;
 
-struct hello_world {
-    void operator()(server::request const &request, server::connection_ptr connection) {
-        server::string_type ip = source(request);
+struct HelloWorld
+{
+    void operator()(Server::request const &request, Server::connection_ptr connection) 
+    {
+        Server::string_type ip = source(request);
         unsigned int port = request.source_port;
+        
         std::ostringstream data;
         data << "Hello, " << ip << ':' << port << '!';
-        connection->set_status(server::connection::ok);
+        
+        connection->set_status(Server::connection::ok);
         connection->write(data.str());
     }
 };
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
 
-    if (argc != 3) {
-        std::cerr << "Usage: " << argv[0] << " address port" << std::endl;
+    if (argc != 3) 
+    {
+        std::cout << "Usage: " << argv[0] << " address port" << std::endl;
         return 1;
     }
 
-    try {
-        hello_world handler;
-        server::options options(handler);
-        server server_(options.address(argv[1]).port(argv[2]));
-        server_.run();
+    std::string address = argv[1];
+    std::string port = argv[2];
+    
+    try 
+    {
+        HelloWorld hw_handler;
+        Server::options options(hw_handler);
+        Server server(options.address(address).port(port));
+        server.run();
     }
-    catch (std::exception &e) {
+    catch (std::exception &e) 
+    {
         std::cerr << e.what() << std::endl;
         return 1;
     }
